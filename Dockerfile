@@ -1,0 +1,23 @@
+FROM theasp/novnc
+RUN apt-get update && \
+    apt-get install -y dosbox unzip && \
+    rm -rfv /var/lib/apt/lists/*
+
+ENV RUN_XTERM=no
+ENV DISPLAY_WIDTH=1024
+ENV DISPLAY_HEIGHT=768
+
+# COPY ./bin /opt/bin
+COPY dosbox.conf /app/conf.d/
+COPY gwbasic.tar.gz /opt/dos/
+COPY gwbasic-master.zip /opt/dos/
+COPY devtools.tar.gz /opt/dos/
+
+RUN tar -xzf /opt/dos/devtools.tar.gz -C /opt/dos/ && \
+    rm /opt/dos/devtools.tar.gz
+RUN unzip /opt/dos/gwbasic-master.zip -d /opt/dos/ && \
+    rm /opt/dos/gwbasic-master.zip
+RUN tar -xzf /opt/dos/gwbasic.tar.gz -C /opt/dos/ && \
+    rm /opt/dos/gwbasic.tar.gz 
+
+VOLUME /opt/dos/source
